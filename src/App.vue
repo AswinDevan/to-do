@@ -45,7 +45,7 @@
       </template>
       <v-container>
         <v-layout row>
-          <v-app-bar-nav-icon @click="drawer = !drawer" color="white"></v-app-bar-nav-icon>
+          <v-app-bar-nav-icon @click="changeDraw()" color="white"></v-app-bar-nav-icon>
           <v-spacer></v-spacer>
           <v-text-field hide-details background-color="transparent" prepend-inner-icon="mdi-magnify"></v-text-field>
         </v-layout>
@@ -54,7 +54,7 @@
         </v-layout>
       </v-container>
       <template v-slot:extension>
-         <p class="header white--text ml-auto">{{getTime()}}</p>
+         <p class="header white--text ml-auto">{{date}}</p>
       </template>
     </v-app-bar>
      <router-view/>
@@ -66,16 +66,40 @@
 export default {
   name: 'App',
   data: () => ({
-    drawer: null,
-    value:false
+    value:false,
+    date:''
   }),
   methods:{
-    getTime(){
+    addZero(value){
+       if(value<10){
+         value="0"+value;
+       }
+       return value;
+    },
+    timeCalc(){
       let date= new Date();
       var month = date.toLocaleString('default', { month: 'short' })
       var day = date.getDate();
       var year = date.getFullYear();
-      return month+" "+day+" , "+year;
+      var h = this.addZero(date.getHours());
+      var m = this.addZero(date.getMinutes());
+      var s = this.addZero(date.getSeconds());
+      this.date= month+" "+day+" , "+year+" | "+h+":"+m+":"+s;
+      setTimeout(this.timeCalc,1000);
+    },
+    changeDraw(){
+      this.$store.commit("CHANGE_DRAWER")
+    }
+  },mounted(){
+    this.timeCalc();
+  },
+  computed:{
+        drawer:{
+          get(){
+      return this.$store.state.drawer;
+          },set(value){
+            this.$store.commit("DRAWER_MODEL",value);
+          }
     }
   }
 };
