@@ -73,8 +73,8 @@ data:()=>({
             this.title="Task Added!"
         }
     },deleteItem(i){
-        this.taskArray.pop(i);
-        this.checkboxArray.pop(i)
+        this.taskArray.splice(i,1);
+        this.checkboxArray.splice(i,1);
     },snackFalse(){
         this.$store.commit("SNACK_FALSE");
     }
